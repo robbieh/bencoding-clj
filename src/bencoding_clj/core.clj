@@ -18,6 +18,7 @@
     (map? x) (enc-map x)
     )
   )
+(defn encode [x] (enc-by-type x))
 
 (def rs #":")
 (def re #"e")
@@ -112,6 +113,7 @@
 (decode "d3:bar4:spam3:fooi42ee")
 (decode "l4:spam6:asdfghe")
 (decode "d3:bar4:spam3:fooi42eel4:spam6:asdfghe")
+(decode "d4:argsd4:pagei0ee1:q24:Admin_availableFunctionse")
   (def a (atom '())) 
   (def s (atom ""))
   (empty? @s)
@@ -122,6 +124,7 @@
   )
 
   (decode (enc-map {"spam" ["a" "b"]}))
+  (encode {"q" "ping"})
   (enc-by-type "test")
   (enc-by-type 100)
   (enc-by-type :foo)
