@@ -4,7 +4,7 @@
 
 (defn enc-by-type)
 (defn enc-string [s] (str (.length s) ":" s ))
-(defn enc-integer [i] (str "i" i "e"))
+(defn enc-number [n] (str "i" n "e"))
 (defn enc-list [l] (str "l" (apply str (map enc-by-type l)) "e") )
 (defn enc-kv [kv] (apply str (map enc-by-type kv)))
 (defn enc-map [m] (str "d" (apply str (map enc-kv (sort m))) "e"))
@@ -12,7 +12,7 @@
   (cond
     (string? x) (enc-string x)
     (keyword? x) (enc-string (str x))
-    (integer? x) (enc-integer x)
+    (number? x) (enc-number x)
     (list? x) (enc-list x)
     (vector? x) (enc-list x)
     (map? x) (enc-map x)
@@ -26,9 +26,9 @@
 (defn decode-step [] nil)
 (defn decode [] nil)
 
-(defn dec-integer [s] 
+(defn dec-number [s] 
   (let [v   (split s re 2)
-        int (Integer/parseInt (first v)) ]
+        int (Long/parseLong (first v)) ]
         [int (last v)]
     )
   )
@@ -86,7 +86,7 @@
   (let [f (first s)
         r (apply str (rest s)) ]
     (cond 
-      (= f \i) (dec-integer r)
+      (= f \i) (dec-number r)
       (= f \l) (dec-list r)
       (= f \d) (dec-map r)
       (= f \e) [nil r]
@@ -110,6 +110,7 @@
   @a))
 
 (comment
+(encode {"q" "InterfaceController_peerStats" "args" {"page" 0}})
 (decode "d3:bar4:spam3:fooi42ee")
 (decode "l4:spam6:asdfghe")
 (decode "d3:bar4:spam3:fooi42eel4:spam6:asdfghe")
@@ -120,18 +121,21 @@
   (conj @a "asdf")
 (let [v (decode-step "4:spame6:asdfgh")]
   (first v)
-  (dec-integer "100e")
+  (dec-number "100e")
   )
 
+  (decode "i1383437115371e")
+  (Integer/parseInt "1383437115371")
+  (Long/parseLong "1383437115371")
   (decode (enc-map {"spam" ["a" "b"]}))
-  (encode {"q" "ping"})
+  (encode {"q" "ping", "page" 0})
   (enc-by-type "test")
   (enc-by-type 100)
   (enc-by-type :foo)
   (enc-kv ["key" "val"])
   (enc-string "test")
-  (enc-integer "100")
-  (enc-integer "-100")
+  (enc-number "100")
+  (enc-number "-100")
   (enc-list '("a" "b" "c" "Test"))
   (enc-map {"this" "is" "a" "Test"})
   (enc-map {"spam" ["a" "b"]})
