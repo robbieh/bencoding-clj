@@ -28,8 +28,8 @@
 
 (defn dec-number [s] 
   (let [v   (split s re 2)
-        int (Long/parseLong (first v)) ]
-        [int (last v)]
+        n   (Long/parseLong (first v)) ]
+    [n (last v)]
     )
   )
 
@@ -124,6 +124,7 @@
   (dec-number "100e")
   )
 
+  (decode (encode {"key" {"key" '(1 2 1383437115371)}}))
   (decode "i1383437115371e")
   (Integer/parseInt "1383437115371")
   (Long/parseLong "1383437115371")
@@ -139,5 +140,5 @@
   (enc-list '("a" "b" "c" "Test"))
   (enc-map {"this" "is" "a" "Test"})
   (enc-map {"spam" ["a" "b"]})
-  (apply str (map enc-by-type '("this" :that 100)))
+
   )
